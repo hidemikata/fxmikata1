@@ -1,12 +1,13 @@
 import settings
 import logging
 from Controller.api import OandaApi
-from Model.pricing import test
+import Model.pricing as pricing
+
 logging.basicConfig(format='%(levelname)s:%(asctime)s :%(message)s', level=logging.DEBUG)
 
 
 def main():
-    logging.info('hoge')
+    #logging.info('hoge')
 
     o = OandaApi(settings.oanda_token, settings.oanda_id)
     # res = o.summary()
@@ -16,7 +17,8 @@ def main():
     #print(o.order())
     #print(o.ordering())
 
-    test()
+    pricing.testadd()
+    pricing.testget()
 
 
 if __name__ == '__main__':

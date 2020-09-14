@@ -1,27 +1,23 @@
+import Model.sqlbase as sqlbase
 import datetime
-from sqlalchemy import create_engine, Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-engine = create_engine('sqlite:///fxdatabase.sql', echo=True)
-
-Base = declarative_base()
+from sqlalchemy import Column, String, DateTime
 
 
-class FxDataUsdJpy1M(Base):
+class FxDataUsdJpy1M(sqlbase.Base):
     __tablename__ = 'usd_jpy_1m'
-
-    time = Column(DateTime,default=datetime.datetime.utcnow, primary_key=True, nullable=False)
+    time = Column(DateTime, default=datetime.datetime.utcnow, primary_key=True, nullable=False)
     name = Column(String)
 
 
-Base.metadata.create_all(engine)
+def testadd():
+    d = FxDataUsdJpy1M()
+    d.name = 'cde'
+    with sqlbase.get_session() as session:
+        session.add(d)
 
 
-def test():
-    print('test')
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    session.add(FxDataUsdJpy1M(name='abc'))
-    session.commit()
-    session.close()
+def testget():
+    r = FxDataUsdJpy1M.query.all()
+    for c in r:
+        print(c.time)
+        print(c.name)
