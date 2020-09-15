@@ -2,6 +2,7 @@ import oandapyV20
 from oandapyV20.endpoints import accounts
 from oandapyV20.endpoints import pricing
 from oandapyV20.endpoints import orders
+from oandapyV20.endpoints import positions
 import settings
 
 
@@ -27,12 +28,29 @@ class OandaApi(object):
         }
         r = pricing.PricingInfo(self.id, params=p)
         return self.req(r)
+    def streaming_price(self, callback):
+        p = {
+                "instruments": "USD_JPY"
+            }
+        r = pricing.PricingStream(self.id, params=p)
+
+        api = oandapyV20.API(self.token)
+        rv = self.client.request(r)
+
+        for ticks in rv:
+            pass
+            #print(ticks)
+
+            #ストリーム終了
+            #r.terminate('maxrecs record recieved')
+
+
 
     # 注文
     def order(self):
         d = {
             "order": {
-                "price": 100.000,
+                "price": 120.000,
                 "timeInForce": "GTC",
                 "instrument": "USD_JPY",
                 "units": "120",
@@ -44,12 +62,29 @@ class OandaApi(object):
         r = orders.OrderCreate(self.id, data=d)
         return self.req(r)
     #注文状況取得
-    def ordering(self):
-        ticket = 229
-
+    def ordering(self, ticket):
         r = orders.OrderDetails(self.id, orderID=ticket)
 
         return self.req(r)
+    #注文中一覧
+    def ordering_all(self):
+        r = orders.OrdersPending(self.id)
+        return self.req(r)
 
 
+    #ポジション一覧
+    def position_all(self):
+        r = positions.OpenPositions(self.id)
+        return self.req(r)
+
+
+    #全ポジション解消
+    def position_all_cancel(self):
+        d = {
+          "longUnits": "ALL"
+        }
+        r = positions.PositionClose(self.id,
+                                    instrument="USD_JPY",
+                                    data=d)
+        return self.req(r)
 

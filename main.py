@@ -17,8 +17,13 @@ def main():
     #print(o.order())
     #print(o.ordering())
 
-    pricing.testadd()
-    pricing.testget()
+    #pricing.testadd()
+    #pricing.testget()
+    #o.streaming_price()
+    #print(o.ordering(212))
+    #print(o.position_all())
+    #print(o.ordering_all())
+    #print(o.position_all_cancel())
 
 
 if __name__ == '__main__':
