@@ -28,6 +28,15 @@ class OandaApi(object):
         }
         r = pricing.PricingInfo(self.id, params=p)
         return self.req(r)
+    def _streaming_price_bits_asks(self, data):
+
+        if data['type'] == 'HEARTBEAT':
+            return None
+
+        bids = data['bids'][0]['price']
+        asks = data['asks'][0]['price']
+        return {'bids':bids, 'asks':asks}
+
     def streaming_price(self, callback):
         p = {
                 "instruments": "USD_JPY"
@@ -39,7 +48,9 @@ class OandaApi(object):
 
         for ticks in rv:
             pass
-            #print(ticks)
+            prices = self._streaming_price_bits_asks(ticks)
+            if prices is not None:
+                callback(prices['bids'], prices['asks'])
 
             #ストリーム終了
             #r.terminate('maxrecs record recieved')
