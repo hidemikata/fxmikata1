@@ -24,6 +24,11 @@ Session = scoped_session(
 Base.metadata.create_all(engine)
 Base.query = Session.query_property()
 
+
+def create_all():
+    Base.metadata.create_all(engine)
+
+
 @contextmanager
 def get_session():
     session = Session()
