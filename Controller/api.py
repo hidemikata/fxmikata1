@@ -32,10 +32,10 @@ class OandaApi(object):
 
         if data['type'] == 'HEARTBEAT':
             return None
-
+        time = data['time']
         bids = data['bids'][0]['price']
         asks = data['asks'][0]['price']
-        return {'bids':bids, 'asks':asks}
+        return {'time':time, 'bids':bids, 'asks':asks}
 
     def streaming_price(self, callback):
         p = {
@@ -48,9 +48,9 @@ class OandaApi(object):
 
         for ticks in rv:
             pass
-            prices = self._streaming_price_bits_asks(ticks)
-            if prices is not None:
-                callback(prices['bids'], prices['asks'])
+            price = self._streaming_price_bits_asks(ticks)
+            if price is not None:
+                callback(price['time'], price['bids'], price['asks'])
 
             #ストリーム終了
             #r.terminate('maxrecs record recieved')

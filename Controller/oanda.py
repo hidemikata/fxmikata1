@@ -13,12 +13,14 @@ class OandaStreamPricingGetter(object):
     def start_stream_getter(self):
         OandaStreamPricingGetter.api.streaming_price(self.stream_getter_callback)
 
-    def stream_getter_callback(self, bids, asks):
-        now = datetime.datetime.now()
-        print(bids, asks)
+    def stream_getter_callback(self, time, bids, asks):
         avr_price = (bids + asks) / 2
+        FxDataUsdJpy1M.update(time, avr_price)
+
         # ここでテーブルに追加する。
         # trankateの実装が必要
+
+
 
 
 # こいつが常にゲットしてDBに保存する。
