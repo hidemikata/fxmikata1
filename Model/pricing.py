@@ -40,21 +40,33 @@ class FxDataUsdJpy1M(sqlbase.Base):
             session.add(data)
 
     @classmethod
-    def truncate_time(self, time):
+    def truncate_time(cls, time):
         time_format = '%Y-%m-%d %H:%M'
         str_date = datetime.strftime(time, time_format)
         return datetime.strptime(str_date, time_format)
 
     @classmethod
     def update(cls, time, price):
+        #timeはdatetime型
         time = cls.truncate_time(time)
         latest = cls.get_latest()
-        #getfortimeをつくってtimeを指定して取ってくるやつをつくる。あれば更新する。
-        #なければnewしてつくる。
-        latest.close = price
-        cls.save_data(latest)
-
-
+        if latest and latest.time == time:
+            #更新
+            latest.close = price
+            if latest.high < price:
+                latest.high = price
+            elif latest.low > price:
+                latest.low = price
+            cls.save_data(latest)
+        else:
+            #新規
+            d = FxDataUsdJpy1M()
+            d.time = time
+            d.open = price
+            d.high = price
+            d.low = price
+            d.close = price
+            cls.save_data(d)
 
 #定義の後でテーブル生成
 sqlbase.create_all()

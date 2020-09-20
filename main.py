@@ -16,10 +16,9 @@ def main():
     #FxDataUsdJpy1M.add_price(time=now, open=1, high=2, low=3, close=4)
 #    latest = FxDataUsdJpy1M.get_latest()
 #    print(latest.open)
-    now = datetime.datetime.now()
-    FxDataUsdJpy1M.update(time=now, price=6)
 
-    exit()
+    #now = datetime.datetime.now()
+    #FxDataUsdJpy1M.update(time=now, price=7)
 
     o = OandaApi(settings.oanda_token, settings.oanda_id)
     # res = o.summary()

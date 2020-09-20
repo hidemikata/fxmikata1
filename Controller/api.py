@@ -1,8 +1,11 @@
+import datetime as datetime
 import oandapyV20
 from oandapyV20.endpoints import accounts
 from oandapyV20.endpoints import pricing
 from oandapyV20.endpoints import orders
 from oandapyV20.endpoints import positions
+from datetime import datetime
+import dateutil.parser
 import settings
 
 
@@ -47,10 +50,15 @@ class OandaApi(object):
         rv = self.client.request(r)
 
         for ticks in rv:
-            pass
             price = self._streaming_price_bits_asks(ticks)
             if price is not None:
-                callback(price['time'], price['bids'], price['asks'])
+                price['time'] = price['time'].split('.')[0]
+                price['time'] = price['time'].replace('T', ' ')
+                print(price['time'])
+
+                callback(datetime.strptime(price['time'], '%Y-%m-%d %H:%M:%S'),
+                         float(price['bids']),
+                         float(price['asks']))
 
             #ストリーム終了
             #r.terminate('maxrecs record recieved')

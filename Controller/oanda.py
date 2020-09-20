@@ -17,11 +17,6 @@ class OandaStreamPricingGetter(object):
         avr_price = (bids + asks) / 2
         FxDataUsdJpy1M.update(time, avr_price)
 
-        # ここでテーブルに追加する。
-        # trankateの実装が必要
-
-
-
 
 # こいつが常にゲットしてDBに保存する。
 oanda_stream_priceing_gettere = OandaStreamPricingGetter()
