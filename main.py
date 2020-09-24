@@ -4,11 +4,17 @@ import datetime
 from Controller.api import OandaApi
 from Model.pricing import FxDataUsdJpy1M
 from Controller.oanda import oanda_stream_priceing_gettere
+from Controller.technical import sma
+
 
 logging.basicConfig(format='%(levelname)s:%(asctime)s :%(message)s', level=logging.DEBUG)
 
 
 def main():
+    #FxDataUsdJpy1M.get_close_data(3)
+
+
+
     # logging.info('hoge')
 
     #print(FxDataUsdJpy1M.get_latest())
@@ -20,7 +26,7 @@ def main():
     #now = datetime.datetime.now()
     #FxDataUsdJpy1M.update(time=now, price=7)
 
-    o = OandaApi(settings.oanda_token, settings.oanda_id)
+    #o = OandaApi(settings.oanda_token, settings.oanda_id)
     # res = o.summary()
     # print(res)
 

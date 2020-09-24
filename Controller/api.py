@@ -10,9 +10,9 @@ import settings
 
 
 class OandaApi(object):
-    def __init__(self, token, id):
-        self.token = token
-        self.id = id
+    def __init__(self):
+        self.token = settings.oanda_token
+        self.id = settings.oanda_id
         self.client = oandapyV20.API(self.token)
 
     def req(self, r):
@@ -31,6 +31,7 @@ class OandaApi(object):
         }
         r = pricing.PricingInfo(self.id, params=p)
         return self.req(r)
+
     def _streaming_price_bits_asks(self, data):
 
         if data['type'] == 'HEARTBEAT':
@@ -63,7 +64,17 @@ class OandaApi(object):
             #ストリーム終了
             #r.terminate('maxrecs record recieved')
 
-
+    #成り行き注文
+    def order_nariyuki(self, units):
+        d = {
+            "order": {
+                "instrument": "USD_JPY",
+                "units": units,
+                "type": "MARKET",
+            }
+        }
+        r = orders.OrderCreate(self.id, data=d)
+        return self.req(r)
 
     # 注文
     def order(self):
@@ -80,11 +91,12 @@ class OandaApi(object):
 
         r = orders.OrderCreate(self.id, data=d)
         return self.req(r)
+
     #注文状況取得
     def ordering(self, ticket):
         r = orders.OrderDetails(self.id, orderID=ticket)
-
         return self.req(r)
+
     #注文中一覧
     def ordering_all(self):
         r = orders.OrdersPending(self.id)

@@ -2,10 +2,12 @@ from Controller.api import OandaApi
 import datetime
 from Model.pricing import FxDataUsdJpy1M
 import settings
+from threading import Thread
+from Controller.order import start_order
 
 
 class OandaStreamPricingGetter(object):
-    api = OandaApi(settings.oanda_token, settings.oanda_id)
+    api = OandaApi()
 
     def __init__(self):
         pass
@@ -15,7 +17,13 @@ class OandaStreamPricingGetter(object):
 
     def stream_getter_callback(self, time, bids, asks):
         avr_price = (bids + asks) / 2
-        FxDataUsdJpy1M.update(time, avr_price)
+        is_create = FxDataUsdJpy1M.update(time, avr_price)
+
+        if is_create:
+            orderThread = Thread(target=start_order)
+            orderThread.start()
+            orderThread.join()
+
 
 
 # こいつが常にゲットしてDBに保存する。

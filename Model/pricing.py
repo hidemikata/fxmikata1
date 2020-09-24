@@ -14,7 +14,7 @@ class FxDataUsdJpy1M(sqlbase.Base):
     @classmethod
     def get_latest(cls):
         r = FxDataUsdJpy1M.query.order_by(desc(FxDataUsdJpy1M.time)).limit(1).all()
-        return r[0]
+        return r[0] if r else None
 
 
     @classmethod
@@ -50,6 +50,7 @@ class FxDataUsdJpy1M(sqlbase.Base):
         #timeはdatetime型
         time = cls.truncate_time(time)
         latest = cls.get_latest()
+        is_create = False
         if latest and latest.time == time:
             #更新
             latest.close = price
@@ -67,6 +68,19 @@ class FxDataUsdJpy1M(sqlbase.Base):
             d.low = price
             d.close = price
             cls.save_data(d)
+            is_create = True
+
+        return is_create
+
+    @classmethod
+    def get_close_data(cls, limit=100, chomp_num=1):
+        r = FxDataUsdJpy1M.query.order_by(desc(FxDataUsdJpy1M.time)).limit(limit).all()
+        for i in range(chomp_num):
+            r.pop(0)
+
+        r = sorted(r, key=lambda t: t.time, reverse=False)
+
+        return [i.close for i in r]
 
 #定義の後でテーブル生成
 sqlbase.create_all()
