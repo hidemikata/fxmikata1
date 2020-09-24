@@ -33,7 +33,7 @@ class Order(object):
         if sma_short_last_2 > sma_long_last_2 and \
                 sma_short_last_1 < sma_long_last_1:
             buy = OandaApi()
-            buy.order_nariyuki(-1000)
+            buy.position_all_cancel()
 
 
 
