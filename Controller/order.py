@@ -12,12 +12,11 @@ class Order(object):
         short_avr = 5
         long_avr = 25
 
+        if len(data) < long_avr + 2:
+            return
+
         sma_short = sma(data, short_avr)
         sma_long = sma(data, long_avr)
-        num = len(sma_short)
-        if num < long_avr + 2:
-            #25までの平均が25個目になる、25, 26で比べる
-            return
 
         sma_short_last_1 = sma_short[-1]
         sma_short_last_2 = sma_short[-2]
