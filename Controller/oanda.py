@@ -4,7 +4,9 @@ from Model.pricing import FxDataUsdJpy1M
 import settings
 from threading import Thread
 from Controller.order import start_order
+import logging
 
+logger = logging.getLogger(__name__)
 
 class OandaStreamPricingGetter(object):
     api = OandaApi()

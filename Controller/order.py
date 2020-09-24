@@ -2,6 +2,7 @@ from Model.pricing import FxDataUsdJpy1M
 from Controller.technical import sma
 from Controller.api import OandaApi
 
+
 class Order(object):
 
     def test(self):
@@ -25,13 +26,13 @@ class Order(object):
 
         #ゴールデンクロス
         if sma_short_last_2 < sma_long_last_2 and \
-                sma_short_last_1 > sma_short_last_1:
+                sma_short_last_1 > sma_long_last_1:
             buy = OandaApi()
             buy.order_nariyuki(1000)
 
         #デッドクロス
         if sma_short_last_2 > sma_long_last_2 and \
-                sma_short_last_1 < sma_short_last_1:
+                sma_short_last_1 < sma_long_last_1:
             buy = OandaApi()
             buy.order_nariyuki(-1000)
 
