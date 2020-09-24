@@ -7,9 +7,7 @@ class Order(object):
     def test(self):
         pass
 
-    def start(self):
-        #data = FxDataUsdJpy1M.get_close_data(limit=1000)#sqliteは別スレッドからクエリーを投げれないのでここでえらーになる。
-        data = []
+    def start(self, data):
         short_avr = 5
         long_avr = 25
 
@@ -39,6 +37,6 @@ class Order(object):
 
 
 
-def start_order():
+def start_order(data):
     order = Order()
-    order.start()
+    order.start(data)

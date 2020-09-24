@@ -20,7 +20,8 @@ class OandaStreamPricingGetter(object):
         is_create = FxDataUsdJpy1M.update(time, avr_price)
 
         if is_create:
-            orderThread = Thread(target=start_order)
+            data = FxDataUsdJpy1M.get_close_data(limit=1000)#getできるのは同一スレッドのみ
+            orderThread = Thread(target=start_order, args=(data, ))#タプルにするとき,がないと単なる括弧。
             orderThread.start()
             orderThread.join()
 
