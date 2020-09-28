@@ -45,11 +45,13 @@ class BackTest(object):
         count = FxDataUsdJpy1M.get_count()
         # 動作確認は
         # count = 500とか
-        count = 500
+        print(count)
+        count = 1000
         offset = count - using_calc_data_num
 
         for i in range(offset, 0, -1):
-            r = FxDataUsdJpy1M.get_close_past_date(limit=using_calc_data_num, past_offset=offset)
+            r = FxDataUsdJpy1M.get_close_past_date(limit=using_calc_data_num, past_offset=i)
+
             from Controller.technical import sma
             short_sma_data = sma(r, short_sma)
             long_sma_data = sma(r, long_sma)
@@ -57,22 +59,27 @@ class BackTest(object):
             from Controller.technical import sma_cross_check
             cross = sma_cross_check(short_sma_data, long_sma_data)
 
-            if cross is 'GC':
-                e = BackTestEvent
-                e.buy_price = r[-1].close
+            if cross == 'GC':
+                e = BackTestEvent()
+                e.buy_price = r[-1]
                 events.append(e)
 
-            elif cross is 'DC':
+            elif cross == 'DC':
                 if events == [] or events[-1].kessai_price != None or events[-1].buy_price == None:
                     #nothing to do
                     pass
-                events[-1].kessai_price = r[-1].close
+                else:
+                    events[-1].kessai_price = r[-1]
+
             else:
                 #nothing to do
                 pass
+        profit = 0
+        for i in events:
+            if i.kessai_price is not None:
+                profit = profit + (i.kessai_price - i.buy_price)
 
-        print(events)
-
+        print(profit)
 
     # こいつが常にゲットしてDBに保存する。
 

@@ -6,12 +6,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
-
+import settings
 logger = logging.getLogger(__name__)  # ???
 
 lock = threading.Lock()
 
-engine = create_engine('sqlite:///fxdatabase.sql', echo=True)
+if settings.backtest:
+    engine = create_engine('sqlite:///fxdatabase_2019.sql', echo=False)
+else:
+    engine = create_engine('sqlite:///fxdatabase.sql', echo=False)
 
 Base = declarative_base()
 

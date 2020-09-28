@@ -11,10 +11,6 @@ logging.basicConfig(format='%(levelname)s:%(asctime)s :%(message)s', level=loggi
 
 
 def main():
-    a = []
-    if a == []:
-        print('t')
-    exit()
     start_getter.start_getter()
 
 
