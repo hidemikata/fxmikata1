@@ -9,6 +9,7 @@ user = settings['HOGEHOGE']['User']
 oanda_token = settings['oanda']['token']
 oanda_id = settings['oanda']['id']
 
+backtest = settings['backtest']['test']
 
 
 

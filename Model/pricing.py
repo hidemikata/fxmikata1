@@ -1,6 +1,6 @@
 import Model.sqlbase as sqlbase
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Float, Integer, desc
+from sqlalchemy import Column, String, DateTime, Float, Integer, desc, asc
 
 
 class FxDataUsdJpy1M(sqlbase.Base):
@@ -73,8 +73,29 @@ class FxDataUsdJpy1M(sqlbase.Base):
         return is_create
 
     @classmethod
+    def get_count(cls):
+        return FxDataUsdJpy1M.query.count()
+
+    @classmethod
+    def get_close_past_date(cls, limit=100, past_offset=0):
+        r = FxDataUsdJpy1M.query.order_by(desc(FxDataUsdJpy1M.time)).limit(limit).offset(past_offset).all()
+        r = sorted(r, key=lambda t: t.time, reverse=False)
+        return [i.close for i in r]
+
+
+#        for i in range(chomp_num):
+#            r.pop(0)
+#
+#        r = sorted(r, key=lambda t: t.time, reverse=False)
+#
+#        return [i.close for i in r]
+
+
+
+    @classmethod
     def get_close_data(cls, limit=100, chomp_num=1):
         r = FxDataUsdJpy1M.query.order_by(desc(FxDataUsdJpy1M.time)).limit(limit).all()
+        #offsetでかきなおしたい。
         for i in range(chomp_num):
             r.pop(0)
 

@@ -9,15 +9,16 @@ class Order(object):
         pass
 
     def start(self, data):
-        short_avr = 5
-        long_avr = 25
+        short_avr_day = 5
+        long_avr_day = 25
 
-        if len(data) < long_avr + 2:
+        if len(data) < long_avr_day + 2:
             return
 
-        sma_short = sma(data, short_avr)
-        sma_long = sma(data, long_avr)
+        sma_short = sma(data, short_avr_day)
+        sma_long = sma(data, long_avr_day)
 
+        #-1末尾
         sma_short_last_1 = sma_short[-1]
         sma_short_last_2 = sma_short[-2]
         sma_long_last_1 = sma_long[-1]
