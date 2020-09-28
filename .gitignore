@@ -3,4 +3,5 @@ __pycache__
 .idea
 .DS_Store
 fxdatabase.sql
+fxdatabase_2019.sql
 
