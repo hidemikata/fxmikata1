@@ -1,6 +1,6 @@
 import Model.sqlbase as sqlbase
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Float, Integer, desc, asc
+from sqlalchemy import Column, String, DateTime, Float, Integer, desc, asc, or_
 
 
 class FxDataUsdJpy1M(sqlbase.Base):
@@ -73,14 +73,24 @@ class FxDataUsdJpy1M(sqlbase.Base):
         return is_create
 
     @classmethod
-    def get_count(cls):
-        return FxDataUsdJpy1M.query.count()
+    def get_count(cls, filter_time='%'):
+        return FxDataUsdJpy1M.query.filter(or_(i for i in filter_time)).count()
 
     @classmethod
-    def get_close_past_date(cls, limit=100, past_offset=0):
-        r = FxDataUsdJpy1M.query.order_by(desc(FxDataUsdJpy1M.time)).limit(limit).offset(past_offset).all()
+    def get_close_test(cls, limit=100, past_offset=0, filter_time='%'):
+        r = FxDataUsdJpy1M.query.filter(or_(i for i in [FxDataUsdJpy1M.time.like('%-%-% '+'01'+':%:%'), FxDataUsdJpy1M.time.like('%-%-% '+'02'+':%:%')])).all()
+        rlist = [i.time for i in r]
+        for i in rlist:
+            print(i)
+        exit()
+#        r =
+        return r
+
+    @classmethod
+    def get_close_past_date(cls, limit=100, past_offset=0, filter_time=['%']):
+        r = FxDataUsdJpy1M.query.filter(or_(i for i in filter_time)).order_by(desc(FxDataUsdJpy1M.time)).limit(limit).offset(past_offset).all()
         r = sorted(r, key=lambda t: t.time, reverse=False)
-        return [i.close for i in r]
+        return r
 
 
 #        for i in range(chomp_num):
