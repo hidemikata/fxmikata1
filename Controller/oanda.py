@@ -61,6 +61,7 @@ class BackTest(object):
             r = FxDataUsdJpy1M.get_close_past_date(limit=using_calc_data_num, past_offset=i, filter_time=filter_list)
 
             r_close = [j.close for j in r]
+
             from Controller.technical import sma
             short_sma_data = sma(r_close, short_sma)
             long_sma_data = sma(r_close, long_sma)
