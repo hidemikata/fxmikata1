@@ -42,7 +42,7 @@ class BackTest(object):
     def start_getter(self):
         events = []
         short_sma = 5
-        long_sma = 25
+        long_sma = 10
         data_margin = 2
         using_calc_data_num = long_sma + data_margin
         # データ取ってくる
@@ -57,10 +57,14 @@ class BackTest(object):
         # count = 2000
         offset = count - using_calc_data_num
         latest_date = None
+
+
         for i in range(offset, 0, -1):
             r = FxDataUsdJpy1M.get_close_past_date(limit=using_calc_data_num, past_offset=i, filter_time=filter_list)
-
             r_close = [j.close for j in r]
+
+
+            new_latest_date = str(r[-1].time).split()[0]
 
             from Controller.technical import sma
             short_sma_data = sma(r_close, short_sma)
@@ -69,7 +73,10 @@ class BackTest(object):
             from Controller.technical import sma_cross_check
             cross = sma_cross_check(short_sma_data, long_sma_data)
 
-            if cross == 'GC':
+            all_times = [j.time.strftime('%Y%m%d') for j in r]
+            same_date = all(all_times[0] == t for t in all_times[1:]) if all_times else False
+
+            if cross == 'GC' and same_date:
                 e = BackTestEvent()
                 e.buy_price = r_close[-1]
                 e.buy_date = r[-1].time
@@ -84,10 +91,11 @@ class BackTest(object):
                     events[-1].kessai_date = r[-1].time
 
             elif latest_date != None and \
-                    latest_date == r[-1].time and \
+                    latest_date != new_latest_date and \
+                    len(events) > 0 and\
                     events[-1].kessai_price == None and \
                     events[-1].buy_price != None:
-                # 日付が超えてたら強制決済.１時間しかとらないので。
+                # 日付が超えてたら強制決済.
                 events[-1].kessai_price = r_close[-1]
                 events[-1].kessai_date = r[-1].time
                 print('date change', str(r[-1].time))
@@ -96,7 +104,7 @@ class BackTest(object):
                 # nothing to do
                 pass
 
-            latest_date = str(r[-1].time).split()[0]
+            latest_date = new_latest_date
 
         if events == []:
             print('nothing')
