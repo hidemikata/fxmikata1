@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)  # ???
 
 lock = threading.Lock()
 
-if settings.backtest:
+if settings.backtest == True:
     engine = create_engine('sqlite:///fxdatabase_2019.sql', echo=False)
 else:
     engine = create_engine('sqlite:///fxdatabase.sql', echo=False)

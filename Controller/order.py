@@ -1,5 +1,6 @@
 from Model.pricing import FxDataUsdJpy1M
 from Controller.technical import sma
+from Controller.technical import sma_cross_check
 from Controller.api import OandaApi
 
 
@@ -8,31 +9,27 @@ class Order(object):
     def test(self):
         pass
 
-    def start(self, data):
-        short_avr_day = 5
-        long_avr_day = 25
+    def start(self, algo, data):
+        same_date = all(data[0] == t for t in data[1:]) if data else False
 
-        if len(data) < long_avr_day + 2:
+        short_avr_day = 5
+        long_avr_day = 10
+        data_margin = 2
+
+        if len(data) < long_avr_day + data_margin:
             return
 
         sma_short = sma(data, short_avr_day)
         sma_long = sma(data, long_avr_day)
+        cross = sma_cross_check(short_sma_data=sma_short, long_sma_data=sma_long)
 
-        #-1末尾
-        sma_short_last_1 = sma_short[-1]
-        sma_short_last_2 = sma_short[-2]
-        sma_long_last_1 = sma_long[-1]
-        sma_long_last_2 = sma_long[-2]
 
         # ゴールデンクロス
-        if sma_short_last_2 < sma_long_last_2 and \
-                sma_short_last_1 > sma_long_last_1:
+        if cross == 'GC':
             buy = OandaApi()
             buy.order_nariyuki(1000)
-
         # デッドクロス
-        if sma_short_last_2 > sma_long_last_2 and \
-                sma_short_last_1 < sma_long_last_1:
+        elif cross == 'DC':
             buy = OandaApi()
             buy.position_all_cancel()
 

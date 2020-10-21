@@ -87,20 +87,10 @@ class FxDataUsdJpy1M(sqlbase.Base):
         return r
 
     @classmethod
-    def get_close_past_date(cls, limit=100, past_offset=0, filter_time=['%']):
+    def get_close_past_date(cls, limit=100, past_offset=0, filter_time=None):
         r = FxDataUsdJpy1M.query.filter(or_(i for i in filter_time)).order_by(desc(FxDataUsdJpy1M.time)).limit(limit).offset(past_offset).all()
         r = sorted(r, key=lambda t: t.time, reverse=False)
         return r
-
-
-#        for i in range(chomp_num):
-#            r.pop(0)
-#
-#        r = sorted(r, key=lambda t: t.time, reverse=False)
-#
-#        return [i.close for i in r]
-
-
 
     @classmethod
     def get_close_data(cls, limit=100, chomp_num=1):
