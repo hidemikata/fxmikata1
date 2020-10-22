@@ -26,16 +26,16 @@ class OandaStreamPricingGetter(object):
         is_create = FxDataUsdJpy1M.update(time, avr_price)
 
         if is_create:
-            filte_time = []
-            filte_time.append(FxDataUsdJpy1M.time.like('%-%-% %:%:%'))#time.likeを後で調べる
-            data = FxDataUsdJpy1M.get_close_past_date(limit=self.algo.num_of_using_data, past_offset=1, filter_time=filte_time)  # getできるのは同一スレッドのみ
+            filter_time = []
+            filter_time.append(FxDataUsdJpy1M.time.like('%-%-% %:%:%'))#time.likeを後で調べる
+            data = FxDataUsdJpy1M.get_close_past_date(limit=self.algo.number_of_using_data(), past_offset=1, filter_time=filter_time)  # getできるのは同一スレッドのみ
             if self.algo.validation(data):#algoをインタフェースでていぎするとよい
                 orderThread = Thread(target=start_order, args=(self.algo, data, ))  # タプルにするとき,がないと単なる括弧。
                 orderThread.start()
                 orderThread.join()
 
 
-if settings.backtest == True:
+if settings.backtest:
     start_getter = BackTest()
 else:
     start_getter = OandaStreamPricingGetter(AlgSimpleMovingAverageCrossAlgorithm())
