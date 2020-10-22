@@ -31,6 +31,7 @@ class AlgSimpleMovingAverageCrossAlgorithm(AbstractAlgorithm):
         return time_valid
 
     def judge(self, data):
+        data = [i.close for i in data]
         sma_short = sma(data, AlgSimpleMovingAverageCrossAlgorithm.short_sma)
         sma_long = sma(data, AlgSimpleMovingAverageCrossAlgorithm.long_sma)
         cross = sma_cross_check(short_sma_data=sma_short, long_sma_data=sma_long)

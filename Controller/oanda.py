@@ -4,8 +4,6 @@ from Model.pricing import FxDataUsdJpy1M
 import settings
 from threading import Thread
 from Controller.order import start_order
-from Controller.backtest import BackTest
-from Controller.algsmacross import AlgSimpleMovingAverageCrossAlgorithm
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,13 +27,8 @@ class OandaStreamPricingGetter(object):
             filter_time = []
             filter_time.append(FxDataUsdJpy1M.time.like('%-%-% %:%:%'))#time.likeを後で調べる
             data = FxDataUsdJpy1M.get_close_past_date(limit=self.algo.number_of_using_data(), past_offset=1, filter_time=filter_time)  # getできるのは同一スレッドのみ
-            if self.algo.validation(data):#algoをインタフェースでていぎするとよい
+            if self.algo.validation(data):
                 orderThread = Thread(target=start_order, args=(self.algo, data, ))  # タプルにするとき,がないと単なる括弧。
                 orderThread.start()
                 orderThread.join()
 
-
-if settings.backtest:
-    start_getter = BackTest()
-else:
-    start_getter = OandaStreamPricingGetter(AlgSimpleMovingAverageCrossAlgorithm())
