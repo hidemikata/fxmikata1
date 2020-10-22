@@ -1,8 +1,8 @@
-
 from datetime import datetime
 from Controller.AbstractAlgorithm import AbstractAlgorithm
 from Controller.technical import sma
 from Controller.technical import sma_cross_check
+
 
 class AlgSimpleMovingAverageCrossAlgorithm(AbstractAlgorithm):
     short_sma = 5
@@ -16,18 +16,52 @@ class AlgSimpleMovingAverageCrossAlgorithm(AbstractAlgorithm):
         if not self.num_of_data(data):
             print('invalid num')
             return False
-        if not self.time_valid(data):
+        if not self.is_data_today(data):
+            print('not today')
+            return False
+        if not self.day_same_valid(data):
+            print('invalid day')
+            return False
+        if not self.is_trade_hour(data):
             print('invalid time')
             return False
+
         return True
+
+    def is_data_today(self, data):
+        today = datetime.strftime(datetime.now(), '%Y-%m-%d')
+        first = datetime.strftime(data[0].time, '%Y-%m-%d')
+        if today != first:
+            return False
+        return True
+
+    def is_trade_hour(self, data):
+        start_time = datetime.strftime(datetime.now(), '%Y-%m-%d 04:00')
+        start_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M')
+
+        first_data_time = datetime.strftime(data[0].time, '%Y-%m-%d %H:%M')
+        first_data_time = datetime.strptime(first_data_time, '%Y-%m-%d %H:%M')
+
+        end_time = datetime.strftime(datetime.now(), '%Y-%m-%d 08:00')
+        end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M')
+
+        end_data_time = datetime.strftime(data[-1].time, '%Y-%m-%d %H:%M')
+        end_data_time = datetime.strptime(end_data_time, '%Y-%m-%d %H:%M')
+
+
+        if start_time.timestamp() < first_data_time.timestamp() and \
+                end_time.timestamp() > end_data_time.timestamp():
+            return True
+
+        return False
 
     def num_of_data(self, data):
         return True if len(data) == self.number_of_using_data() else False
 
-    def time_valid(self, data):
+    def day_same_valid(self, data):
         time_format = '%Y-%m-%d'
         time = [datetime.strftime(i.time, time_format) for i in data]
-        time_valid = all(time[0] == t for t in time[1:]) if time else False#日付でvalidationするようにする。
+        time_valid = all(time[0] == t for t in time[1:]) if time else False  # 日付でvalidationするようにする。
         return time_valid
 
     def judge(self, data):
@@ -45,7 +79,3 @@ class AlgSimpleMovingAverageCrossAlgorithm(AbstractAlgorithm):
             judge = None
 
         return judge
-
-
-
-
