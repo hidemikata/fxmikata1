@@ -13,10 +13,12 @@ class Order(object):
         judge = self.algo.judge(self.data)
 
         if judge == 'buy':
+            print('buy')
             buy = OandaApi()
             buy.order_nariyuki(1000)
 
         elif judge == 'sell':
+            print('sell')
             buy = OandaApi()
             buy.position_all_cancel()
 
