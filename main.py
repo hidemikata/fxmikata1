@@ -15,6 +15,7 @@ logging.basicConfig(format='%(levelname)s:%(asctime)s :%(message)s', level=loggi
 def main():
 
     start_server()
+    exit()
 
     if settings.backtest:
         start_getter = BackTest()
