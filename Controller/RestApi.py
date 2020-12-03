@@ -28,5 +28,6 @@ class RestApi(object):
             time = v.time.strftime('%Y-%m-%d %H:%M:%S')
             d = {time:[v.open, v.high, v.low, v.close]}
             ret_data.update(d)
+
         ret_data.update({'high': high, 'low':low})
         return json.dumps(ret_data)

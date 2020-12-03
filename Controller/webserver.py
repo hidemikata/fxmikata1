@@ -11,6 +11,10 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         print('path = {}'.format(self.path))
         parsed_path = urlparse(self.path)
         print('parsed: path = {}, query = {}'.format(parsed_path.path, parse_qs(parsed_path.query)))
+        query = parse_qs(parsed_path.query)
+        limit = 100
+        if 'limit' in query:
+            limit = query['limit'][0]
 
         if parsed_path.path not in urls:
             self.send_response(404)
@@ -19,7 +23,7 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'notfound')
             return
 
-        response_body = urls[parsed_path.path]()
+        response_body = urls[parsed_path.path](limit)
 
         print('headers\r\n-----\r\n{}-----'.format(self.headers))
 
