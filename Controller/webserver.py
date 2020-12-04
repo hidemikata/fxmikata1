@@ -3,7 +3,7 @@ from urllib.parse import parse_qs, urlparse
 from threading import Thread
 from Controller.webserver_routes import urls
 
-address = ('localhost', 8080)
+address = ('localhost', 8001)
 
 
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
